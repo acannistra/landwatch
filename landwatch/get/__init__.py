@@ -1,10 +1,10 @@
 import click
-from .lands import download
+from .lands import _cli
 
 @click.group()
 def get():
-    pass
+    pass # pragma: no cover
 
-get.add_command(download)
+get.add_command(_cli)
 
 _cli = get

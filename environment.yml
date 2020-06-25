@@ -10,4 +10,6 @@ dependencies:
     - coveralls
     - click==7.1.2
     - coverage==5.1
+    - tqdm
+    - requests
 prefix: /Users/tony/miniconda3/envs/landwatch
