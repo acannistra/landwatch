@@ -5,7 +5,9 @@ dependencies:
   - python=3.6
   - pandas
   - ipykernel
+  - pip
   - pip:
+    - coveralls
     - click==7.1.2
     - coverage==5.1
 prefix: /Users/tony/miniconda3/envs/landwatch
