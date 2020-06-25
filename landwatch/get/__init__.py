@@ -1,7 +1,10 @@
 import click
+from .lands import download
 
-@click.command()
+@click.group()
 def get():
     pass
+
+get.add_command(download)
 
 _cli = get

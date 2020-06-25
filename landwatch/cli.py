@@ -1,4 +1,5 @@
 import os
+from . import PACKAGE_NAME
 from importlib import import_module
 
 import click
@@ -9,7 +10,7 @@ SUBMODULES = [
      if not m.startswith('__')
 ]
 # Set up CLI group.
-@click.group()
+@click.group(name=PACKAGE_NAME)
 def cli_main():
     pass
 
