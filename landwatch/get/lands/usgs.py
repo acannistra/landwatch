@@ -25,8 +25,9 @@ class USGSProtectedLands(object):
     """Access USGS Protected Lands data"""
     ZIP_SHP_DATA_URL = "https://www.sciencebase.gov/catalog/file/get/5b030c7ae4b0da30c1c1d6de?f=__disk__97%2F0a%2F32%2F970a32899eb4389aaf8b3abf61b6bc7fde229df8"
     DATA_FILENAME = "USGSPAD.shp.zip"
-    def __init__(self, local_loc=None):
+    def __init__(self, local_loc=None, alternate_src=None):
         self.local_loc = local_loc
+        self.alternate_src = alternate_src
 
     def unzip(self, destination, zipfile=None):
         """Unzip USGS Protected Lands database file. Uses local_loc if zipfile is not specified"""
@@ -55,12 +56,15 @@ class USGSProtectedLands(object):
                  "in extra bandwidth usage and download times.")
 
         print("Downloading...")
+        srcpath = self.alternate_src if self.alternate_src else ZIP_SHP_DATA_URL
         with TemporaryDirectory() as td:
             tmpfile = os.path.join(td, "pad-us.zip")
 
-            _download_file(USGSProtectedLands.ZIP_SHP_DATA_URL, tmpfile)
+            _download_file(srcpath, tmpfile)
 
             print("Unzipping file...")
+
+
             Popen(UNZIP_CMD.format(
                 zipfile = tmpfile,
                 outdir = os.path.join(destination, "usgs_pad.shp")

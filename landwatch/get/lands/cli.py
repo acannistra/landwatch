@@ -12,22 +12,26 @@ def lands(ctx, type):
     ctx.obj['type'] = type
 
 
+## Data Download Command
 @lands.command(
     help = "Download public lands data."
 )
 # @click.argument("type")
-# @click.argument("dest")
+@click.argument("dest")
 @click.pass_context
-def download(ctx):
+def download(ctx, dest):
     """Download public lands data."""
+    print(ctx.obj['type'] == "usgs")
     if ctx.obj['type'] == "usgs":
         _data = USGSProtectedLands()
-    if ctx.obj['type'] == "wdpa":
+        _data.download(dest)
+    elif ctx.obj['type'] == "wdpa":
         _data = WDPA()
     else:
         raise click.UsageError(f"Data type \"{ctx.obj['type']}\" is not supported.")
     _data.download(dest)
 
+## Data Unzip Command
 @lands.command(help="Unzip already-downloaded data")
 @click.argument("data")
 @click.argument("dest")
