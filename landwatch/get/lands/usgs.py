@@ -44,6 +44,7 @@ class USGSProtectedLands(object):
         ), shell=True).communicate()
 
     def download(self, destination):
+
         """
         Download and unzip PAD-US data into destination.
 
@@ -69,3 +70,24 @@ class USGSProtectedLands(object):
                 zipfile = tmpfile,
                 outdir = os.path.join(destination, "usgs_pad.shp")
             ), shell=True).communicate()
+
+            self.local_loc = outdir
+
+    def savedb(self, destination=None, layers=["PADUS2_0Fee"]):
+        """
+        Filters the original data and writes a Spatialite database
+        containing PADUS2_0Fee layer. Provide `layers` as a list
+        to specify alternative layers.
+
+        Reprojects to EPSG:4326.
+        """
+        destination = self.local_loc if not destination else destination
+        destination = os.path.join(destination, "usgspad.sqlite")
+
+        for layer in layers:
+            SAVECMD = (
+                f"ogr2ogr -f \"SQLite\" {self.local_loc} -nlt MULTIPOLYGON -nln {layer}"
+                f"-dsco SPATIALITE=YES -dialect sqlite -append -sql "
+                f"\"SELECT * FROM {layer} WHERE Mang_Type = 'FED' {destination}"
+            )
+            print(SAVECMD)
