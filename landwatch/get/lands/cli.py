@@ -45,3 +45,14 @@ def unzip(ctx, data, dest):
         click.UsageError(f"Data type \"{ctx.obj['type']}\" is not supported.")
 
     _data.unzip(dest)
+
+@lands.command(help="Process unzipped raw data to Spatialite db (see docs).")
+@click.argument("source")
+@click.option("-d", "--destination", help="Destination. Defaults to original source location.")
+@click.pass_context
+def savedb(ctx, source, destination):
+    if ctx.obj['type'] == 'usgs':
+        _data = USGSProtectedLands(local_loc=source)
+    else:
+        click.UsageError(f"Data type \"{ctx.obj['type']}\" is not supported.")
+    _data.savedb(destination=destination)
