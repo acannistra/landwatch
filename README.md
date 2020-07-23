@@ -22,7 +22,7 @@ This project was inspired by the film _Public Trust_, to be released 25 Septembe
 > In a time of growing polarization, Americans still share something in common: 640 million acres of public land. Held in trust by the federal government for all citizens of the United States, these places are a stronghold against climate change, sacred to native people, home to wildlife and intrinsic to our national identity. But today, despite support from voters across the political spectrum, they face unprecedented threats from extractive industries and the politicians in their pockets. Part love letter, part political exposé, Public Trust investigates how we arrived at this precarious moment through three heated conflicts—a national monument in the Utah desert, a proposed mine in the Boundary Waters and oil drilling in the Arctic National Wildlife Refuge—and makes a case for their continued protection.
 
  Watch the trailer:
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/v59R37i-CIU?controls=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![](docs/img/publictrust.png)](https://youtu.be/v59R37i-CIU)
 
 ## Contributing
 [![Open Issues badge](https://img.shields.io/github/issues-raw/acannistra/landwatch?color=00A676&style=flat-square)](https://github.com/acannistra/landwatch/issues)
