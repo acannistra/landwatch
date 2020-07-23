@@ -23,6 +23,9 @@ Some of these data types are derived from a single source (e.g. both legislation
 | Legislation | Congress API | API | ProPublica | https://projects.propublica.org/api-docs/congress-api/ | Member data, bill data, floor actions, committee data |
 | Public Lands | Protected Areas Database | Data Download | USGS | https://www.usgs.gov/core-science-systems/science-analytics-and-synthesis/gap/science/pad-us-data-download?qt-science_center_objects=0#qt-science_center_objects | From the Gap Analysis Project  |
 
+Other Notes:
+* [WDPA Documentation / Manual](http://wdpa.s3.amazonaws.com/WDPA_Manual/English/WDPA_Manual_1_4_EN_FINAL.pdf)
+
 ## Implementation Strategy
 
 The implementation of each data type will be as a sub-module (`.py`) within this `get` directory. Each type (`lands`, `bills`, `sponsors`, and `finance`) will have its own file. These modules will contain a class implementing various domain-specific functions. These are not yet enumerated. All will eventually have a `save` or similar command which writes final output to a flatfile/csv.
