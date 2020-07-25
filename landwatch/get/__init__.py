@@ -1,7 +1,10 @@
 import click
+from .lands import _cli
 
-@click.command()
+@click.group()
 def get():
-    pass
+    pass # pragma: no cover
+
+get.add_command(_cli)
 
 _cli = get
