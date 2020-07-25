@@ -49,6 +49,7 @@ def unzip(ctx, data, dest):
 @lands.command(help="Process unzipped raw data to Spatialite db (see docs).")
 @click.argument("source")
 @click.option("-d", "--destination", help="Destination. Defaults to original source location.")
+@click.option("--all", help="Output entire PAD-US (if not given, output only contains federally-managed land)")
 @click.pass_context
 def savedb(ctx, source, destination):
     if ctx.obj['type'] == 'usgs':

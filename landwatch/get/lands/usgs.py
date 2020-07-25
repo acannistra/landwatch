@@ -73,21 +73,31 @@ class USGSProtectedLands(object):
 
             self.local_loc = outdir
 
-    def savedb(self, destination=None, layers=["PADUS2_0Fee"]):
+    def savedb(self, destination=None, layers=["PADUS2_0Fee"], fed_only=True):
         """
         Filters the original data and writes a Spatialite database
         containing PADUS2_0Fee layer. Provide `layers` as a list
         to specify alternative layers.
+
+        Fed_only only keeps lands under federal management (default true)
 
         Reprojects to EPSG:4326.
         """
         destination = self.local_loc if not destination else destination
         destination = os.path.join(destination, "usgspad.sqlite")
 
+        if os.path.exists(destination):
+            print(f"warning: {destination} exists! It will be appended to.")
+
+        filter = "SELECT * FROM PADUS2_0Fee"
+        filter = filter + " WHERE Mang_Type = 'FED'" if fed_only else filter
+
+
         for layer in layers:
             SAVECMD = (
-                f"ogr2ogr -f \"SQLite\" {self.local_loc} -nlt MULTIPOLYGON -nln {layer}"
-                f"-dsco SPATIALITE=YES -dialect sqlite -append -sql "
-                f"\"SELECT * FROM {layer} WHERE Mang_Type = 'FED' {destination}"
+                f"ogr2ogr -progress -f \"SQLite\" {destination} -nlt MULTIPOLYGON -nln {layer} "
+                f"-dsco SPATIALITE=YES -dialect sqlite -append -t_srs EPSG:4326 -sql \"" + filter + "\" "
+                f"{self.local_loc} "
             )
             print(SAVECMD)
+            Popen(SAVECMD, shell=True).communicate()
