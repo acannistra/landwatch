@@ -2,6 +2,7 @@ import os
 import sqlite3
 
 from loguru import logger
+import json
 
 """
 billdb module
@@ -139,18 +140,34 @@ class BillDB(object):
         columns of schema with null.
 
         If parcel_id is provided, adds a row to the parcel table."""
-
         conn = sqlite3.connect(self.path)
         c = conn.cursor()
         # insert bill
-        insert_string = [repr(billdata[col]) if col in billdata.keys() else 'null' for col in self.bills_table_schema.keys()]
-        query_string = f"INSERT INTO {self.bills_table_name} ({','.join(self.bills_table_schema.keys())}) VALUES ({',' .join(insert_string)})"
+        insert = []
+        for col in self.bills_table_schema.keys():
+            data = billdata[col]
+            if type(data) == dict:
+                data = ("'" + json.dumps(data)+ "'").replace('"', '\"')
+            elif data == None:
+                data = 'null'
+            elif type(data) == list:
+                data = "\"" + str(data) + "\""
+            else:
+                data = repr(data)
+            insert.append(data)
+
+        # insert_string = [
+        #     repr(billdata[col]) if col in billdata.keys() else 'null'
+        #     for col in self.bills_table_schema.keys()
+        # ]
+        query_string = f"INSERT INTO {self.bills_table_name} ({','.join(self.bills_table_schema.keys())}) VALUES ({',' .join(insert)})"
         self.logger.debug(query_string)
         try:
             c.execute(query_string)
         except sqlite3.IntegrityError as ie:
             self.logger.warning(f"Bill {billdata['bill_id']} already exists in database.")
             c.close()
+            return
 
         # insert link
         query_string = f"INSERT INTO {self.links_table_name} ('land_id', 'bill_id') VALUES (?, ?)"

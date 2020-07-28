@@ -24,7 +24,7 @@ class ProPublicaAPI(object):
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max = 10000,
-        stop_max_attempt_number=10
+        stop_max_attempt_number=5
     )
     def bills_search(self, query_text):
         """
@@ -33,7 +33,7 @@ class ProPublicaAPI(object):
 
         Returns JSON unless a non-200 status code is returned,
         then it will retry with exponential backoff up to
-        20 times. Raises requests.HTTPError.
+        5 times. Raises requests.HTTPError.
         """
         query_url = os.path.join(
             ProPublicaAPI.API_ROOT,
@@ -41,9 +41,11 @@ class ProPublicaAPI(object):
             'search.json'
         )
         params = {
-            "query" : query_text
+            "query" : "\"" + query_text + "\""
         }
 
         response = self.session.get(query_url, params=params)
         response.raise_for_status()
-        return(response.json())
+        response_json = response.json()
+        if response_json['results'][0]['offset'] > 0: raise NotImplementedError("Pagination not enabled. ")
+        return response_json['results'][0]['bills']
