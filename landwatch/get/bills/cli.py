@@ -26,6 +26,7 @@ def bills(ctx):
 @click.option("--api-key", help="ProPublica Congress API key.", required=True)
 @click.option("--overwrite", help="Overwrite existing bills database", is_flag=True)
 @click.option("--debug", is_flag=True)
+@click.option("--parcels", metavar='<file>', help="File containing specific parcel names (ignores DB.) Useful for resuming failed parcels.")
 @click.pass_context
 def download(ctx, **args):
     """
@@ -36,13 +37,17 @@ def download(ctx, **args):
         logger.remove()
         logger.add(sys.stderr, level='INFO')
 
+    parcels = []
+    if args['parcels']:
+        logger.info(f"Reading parcels from file {args['parcels']}.")
+        parcels = open(args['parcels']).read().splitlines()
+    else:
+        parcels = get_parcel_names(
+            args['lands'],
+            table_name = args['parcel_table'],
+            col_name  = args['parcel_col'])
 
-    parcels = get_parcel_names(
-        args['lands'],
-        table_name = args['parcel_table'],
-        col_name  = args['parcel_col'])
-
-    logger.info(f"Found {len(parcels)} unique parcels in {args['parcel_table']}.{args['parcel_col']}")
+        logger.info(f"Found {len(parcels)} unique parcels in {args['parcel_table']}.{args['parcel_col']}")
 
     api = ProPublicaAPI(args['api_key'])
     db  = BillDB(args['dest'], overwrite=args['overwrite'], logger=logger)
