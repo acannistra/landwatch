@@ -12,4 +12,6 @@ dependencies:
     - coverage==5.1
     - tqdm
     - requests
+    - loguru
+    - tqdm
 prefix: /Users/tony/miniconda3/envs/landwatch
