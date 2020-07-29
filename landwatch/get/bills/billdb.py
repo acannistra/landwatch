@@ -12,6 +12,7 @@ A loose wrapper around sqlite3.
 
 """
 
+
 def create_table(conn, name, schema, logger=logger):
     """Creates a db table with name and schema at conn"""
     logger.info(f"Creating table {name}")
@@ -22,7 +23,6 @@ def create_table(conn, name, schema, logger=logger):
     c.execute(create_query)
     conn.commit()
     c.close()
-
 
 
 class BillDB(object):
@@ -36,8 +36,9 @@ class BillDB(object):
 
 
     """
-    bills_table_name = 'bills'
-    bills_table_schema =  {
+
+    bills_table_name = "bills"
+    bills_table_schema = {
         "bill_id": "text PRIMARY KEY",
         "bill_slug": "text",
         "bill_type": "text",
@@ -61,32 +62,30 @@ class BillDB(object):
         "senate_passage": "text",
         "enacted": "text",
         "vetoed": "text",
-        "cosponsors": 'integer',
-        "cosponsors_by_party": 'blob',
+        "cosponsors": "integer",
+        "cosponsors_by_party": "blob",
         "committees": "text",
-        "committee_codes": 'blob',
-        "subcommittee_codes": 'blob',
-        "primary_subject": 'text',
+        "committee_codes": "blob",
+        "subcommittee_codes": "blob",
+        "primary_subject": "text",
         "summary": "text",
         "summary_short": "text",
         "latest_major_action_date": "text",
-        "latest_major_action": "text"
+        "latest_major_action": "text",
     }
-    links_table_name = 'land_bill_links'
-    links_table_schema = {
-        'land_id' : 'text',
-        'bill_id' : 'text'
-    }
+    links_table_name = "land_bill_links"
+    links_table_schema = {"land_id": "text", "bill_id": "text"}
 
     def __init__(
         self,
         path,
-        bills_table_name = bills_table_name,
-        bills_table_schema = bills_table_schema,
-        links_table_name = links_table_name,
-        links_table_schema = links_table_schema,
+        bills_table_name=bills_table_name,
+        bills_table_schema=bills_table_schema,
+        links_table_name=links_table_name,
+        links_table_schema=links_table_schema,
         overwrite=True,
-        logger=logger):
+        logger=logger,
+    ):
         """
         Check if db exists at path. If not, create one.
 
@@ -107,15 +106,17 @@ class BillDB(object):
         # check if tables exist
         c = self.connection.cursor()
         tableCount = c.execute(
-            'SELECT count(*) from sqlite_master where type=\'table\' and name in (?, ?)',
-            (self.bills_table_name, self.links_table_name)
+            "SELECT count(*) from sqlite_master where type='table' and name in (?, ?)",
+            (self.bills_table_name, self.links_table_name),
         ).fetchone()
-        tableExists = (tableCount[0] == 2)
+        tableExists = tableCount[0] == 2
         c.close()
 
         if tableExists and not self.overwrite:
-            self.logger.info(f"Both {self.bills_table_name} and {self.links_table_name} exist."
-            " Appending to it. Add overwrite=True to overwrite.")
+            self.logger.info(
+                f"Both {self.bills_table_name} and {self.links_table_name} exist."
+                " Appending to it. Add overwrite=True to overwrite."
+            )
 
         if self.overwrite:
             logger.warning(f"Overwrite: True. Dropping tables.")
@@ -127,11 +128,20 @@ class BillDB(object):
 
         if not tableExists or self.overwrite:
             ## create bills table
-            create_table(self.connection, self.bills_table_name, self.bills_table_schema, logger=self.logger)
+            create_table(
+                self.connection,
+                self.bills_table_name,
+                self.bills_table_schema,
+                logger=self.logger,
+            )
 
             ## create links table
-            create_table(self.connection, self.links_table_name, self.links_table_schema, logger=self.logger)
-
+            create_table(
+                self.connection,
+                self.links_table_name,
+                self.links_table_schema,
+                logger=self.logger,
+            )
 
         self.connection.close()
 
@@ -149,11 +159,11 @@ class BillDB(object):
             if type(data) == str:
                 data = data.replace("'", "")
             if type(data) == dict:
-                data = ("'" + json.dumps(data)+ "'").replace('"', '\"')
+                data = ("'" + json.dumps(data) + "'").replace('"', '"')
             elif data == None:
-                data = 'null'
+                data = "null"
             elif type(data) == list:
-                data = "\"" + str(data) + "\""
+                data = '"' + str(data) + '"'
             else:
                 data = repr(data)
             insert.append(data)
@@ -167,12 +177,14 @@ class BillDB(object):
         try:
             c.execute(query_string)
         except sqlite3.IntegrityError as ie:
-            self.logger.warning(f"Bill {billdata['bill_id']} already exists in database.")
+            self.logger.warning(
+                f"Bill {billdata['bill_id']} already exists in database."
+            )
             c.close()
             return
 
         # insert link
         query_string = f"INSERT INTO {self.links_table_name} ('land_id', 'bill_id') VALUES (?, ?)"
-        c.execute(query_string, (parcel_id, billdata['bill_id']))
+        c.execute(query_string, (parcel_id, billdata["bill_id"]))
         conn.commit()
         conn.close()
