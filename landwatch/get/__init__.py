@@ -1,12 +1,24 @@
+import os
+
 import click
-from .lands import _cli as lands_cli
-from .bills import _cli as bills_cli
+from importlib import import_module
 
-@click.group()
+from loguru import logger
+
+SUBMODULES = [
+    import_module(f".{m}", package='landwatch.get') for m in next(os.walk(os.path.dirname(__file__)))[1]
+     if not m.startswith('__')
+]
+# Set up CLI group.
+@click.group(name='get')
 def get():
-    pass # pragma: no cover
+    pass
 
-get.add_command(lands_cli)
-get.add_command(bills_cli)
+# Grab "_cli" for each module.
+for sm in SUBMODULES:
+    try:
+        get.add_command(sm._cli)
+    except AttributeError as e:
+        logger.warning(e)
 
 _cli = get
