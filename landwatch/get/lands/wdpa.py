@@ -18,13 +18,16 @@ Tony Cannistra
 Manages the data access of the World Database of Protected Areas.
 """
 
+
 class WDPA(object):
     """
     Access WDPA protected areas dataset
     https://www.protectedplanet.net/
     """
 
-    ZIP_SHP_DATA_URL = "https://www.protectedplanet.net/downloads/WDPA_Jun2020?type=shapefile"
+    ZIP_SHP_DATA_URL = (
+        "https://www.protectedplanet.net/downloads/WDPA_Jun2020?type=shapefile"
+    )
     DATA_FILENAME = "WDPA_Jun2020.shp"
 
     def __init__(self, local_loc=None):
@@ -48,17 +51,11 @@ class WDPA(object):
         zipdest = os.path.join(destination, WDPA.DATA_FILENAME)
         _unzip(zipfile, zipdest)
 
-        result_zipfiles = glob(
-            os.path.join(
-                zipdest,
-                "*.zip"
-            )
-        )
+        result_zipfiles = glob(os.path.join(zipdest, "*.zip"))
 
         for file in result_zipfiles:
             rootname = os.path.splitext(file)[0]
             _unzip(file, rootname)
-
 
     def download(self, destination):
         """
@@ -68,13 +65,15 @@ class WDPA(object):
         re-downloading may be unnecessary in this case.
         """
         if self.local_loc:
-            warn("Local location of dataset already provided."
-                 "Re-running download in this case will result"
-                 "in extra bandwidth usage and download times.")
+            warn(
+                "Local location of dataset already provided."
+                "Re-running download in this case will result"
+                "in extra bandwidth usage and download times."
+            )
 
         print("Downloading...")
         with TemporaryDirectory() as td:
-            tmpfile = os.path.join(td, WDPA.DATA_FILENAME+'.zip')
+            tmpfile = os.path.join(td, WDPA.DATA_FILENAME + ".zip")
 
             _download_file(WDPA.ZIP_SHP_DATA_URL, tmpfile)
 

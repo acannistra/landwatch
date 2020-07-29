@@ -21,10 +21,13 @@ Manages the data access of USGS datasets, including:
 
 UNZIP_CMD = "unzip -u -o {zipfile} -d {outdir}"
 
+
 class USGSProtectedLands(object):
     """Access USGS Protected Lands data"""
+
     ZIP_SHP_DATA_URL = "https://www.sciencebase.gov/catalog/file/get/5b030c7ae4b0da30c1c1d6de?f=__disk__97%2F0a%2F32%2F970a32899eb4389aaf8b3abf61b6bc7fde229df8"
     DATA_FILENAME = "USGSPAD.shp.zip"
+
     def __init__(self, local_loc=None, alternate_src=None):
         self.local_loc = local_loc
         self.alternate_src = alternate_src
@@ -38,10 +41,13 @@ class USGSProtectedLands(object):
             warn(f"Directory {destination} does not exist; creating...")
             os.makedirs(destination)
 
-        Popen(UNZIP_CMD.format(
-            zipfile = zipfile,
-            outdir = os.path.join(destination, "usgs_pad.shp")
-        ), shell=True).communicate()
+        Popen(
+            UNZIP_CMD.format(
+                zipfile=zipfile,
+                outdir=os.path.join(destination, "usgs_pad.shp"),
+            ),
+            shell=True,
+        ).communicate()
 
     def download(self, destination):
 
@@ -52,9 +58,11 @@ class USGSProtectedLands(object):
         re-downloading may be unnecessary in this case.
         """
         if self.local_loc:
-            warn("Local location of dataset already provided."
-                 "Re-running download in this case will result"
-                 "in extra bandwidth usage and download times.")
+            warn(
+                "Local location of dataset already provided."
+                "Re-running download in this case will result"
+                "in extra bandwidth usage and download times."
+            )
 
         print("Downloading...")
         srcpath = self.alternate_src if self.alternate_src else ZIP_SHP_DATA_URL
@@ -65,11 +73,13 @@ class USGSProtectedLands(object):
 
             print("Unzipping file...")
 
-
-            Popen(UNZIP_CMD.format(
-                zipfile = tmpfile,
-                outdir = os.path.join(destination, "usgs_pad.shp")
-            ), shell=True).communicate()
+            Popen(
+                UNZIP_CMD.format(
+                    zipfile=tmpfile,
+                    outdir=os.path.join(destination, "usgs_pad.shp"),
+                ),
+                shell=True,
+            ).communicate()
 
             self.local_loc = outdir
 
@@ -92,11 +102,12 @@ class USGSProtectedLands(object):
         filter = "SELECT * FROM PADUS2_0Fee"
         filter = filter + " WHERE Mang_Type = 'FED'" if fed_only else filter
 
-
         for layer in layers:
             SAVECMD = (
-                f"ogr2ogr -progress -f \"SQLite\" {destination} -nlt MULTIPOLYGON -nln {layer} "
-                f"-dsco SPATIALITE=YES -dialect sqlite -append -t_srs EPSG:4326 -sql \"" + filter + "\" "
+                f'ogr2ogr -progress -f "SQLite" {destination} -nlt MULTIPOLYGON -nln {layer} '
+                f'-dsco SPATIALITE=YES -dialect sqlite -append -t_srs EPSG:4326 -sql "'
+                + filter
+                + '" '
                 f"{self.local_loc} "
             )
             print(SAVECMD)
