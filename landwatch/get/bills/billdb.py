@@ -146,6 +146,8 @@ class BillDB(object):
         insert = []
         for col in self.bills_table_schema.keys():
             data = billdata[col]
+            if type(data) == str:
+                data = data.replace("'", "")
             if type(data) == dict:
                 data = ("'" + json.dumps(data)+ "'").replace('"', '\"')
             elif data == None:
