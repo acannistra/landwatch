@@ -14,4 +14,5 @@ dependencies:
     - requests
     - loguru
     - tqdm
+    - retrying
 prefix: /Users/tony/miniconda3/envs/landwatch
