@@ -1,4 +1,5 @@
-# Landwatch
+# <p align='center'><img height="100" src="/docs/img/logo@2x.png"></img></p>
+
 
 [![](https://img.shields.io/travis/acannistra/landwatch?style=flat-square)](https://travis-ci.org/github/acannistra/landwatch) [![Coverage Status](https://img.shields.io/coveralls/github/acannistra/landwatch?style=flat-square)](https://coveralls.io/github/acannistra/landwatch)
 [![Open Issues badge](https://img.shields.io/github/issues-raw/acannistra/landwatch?color=00A676&style=flat-square)](https://github.com/acannistra/landwatch/issues)
