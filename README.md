@@ -28,6 +28,7 @@ This project was inspired by the film _Public Trust_, to be released 25 Septembe
 ## Contributing
 [![Open Issues badge](https://img.shields.io/github/issues-raw/acannistra/landwatch?color=00A676&style=flat-square)](https://github.com/acannistra/landwatch/issues)
 [![Open Pull Requests badge](https://img.shields.io/github/issues-pr-raw/acannistra/landwatch?color=00A676&style=flat-square)](https://github.com/acannistra/landwatch/pulls)
+[![Wiki badge](https://img.shields.io/badge/docs-wiki-blue?style=flat-square)](https://github.com/acannistra/landwatch/wiki)
 
 ### Research
 There are quite a bit of research questions in this project that either pertain to the resources that are best used in our implementation (e.g. what data sources are best?), or to the possible investigations that could be done with our database.
