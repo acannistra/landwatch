@@ -1,5 +1,5 @@
 
-# <img height="50" src="./docs/img/logo@2x.png"></img>
+# <img height="50" src="../docs/img/logo@2x.png"></img>
 
 Landwatch is a Python package under development to organize and visualize the connections between United States federal public lands, legislation, legislators, and corporate campaign financiers.
 
