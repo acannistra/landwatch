@@ -36,4 +36,6 @@ provider "aws" {
 output "docker_registry" {
   value = aws_ecr_repository.app.repository_url
 }
-
+output "ecs_execution_role" {
+  value = aws_iam_role.taskexecrole.arn
+}
