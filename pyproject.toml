@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "landwatch"
+version = "0.1.0"
+description = ""
+authors = ["Tony Cannistra <tony.cannistra@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.1.3"
+loguru = "^0.6.0"
+prefect = ">2.0b"
+tqdm = "^4.64.0"
+retrying = "^1.3.3"
+requests-cache = "^0.9.5"
+
+[tool.poetry.dev-dependencies]
+coveralls = "^3.3.1"
+unittest = "^0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

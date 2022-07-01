@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 
 class TestDownloadFile(unittest.TestCase):
     def test_download(self):
-        test_url = "https://via.placeholder.com/200x150"
+        test_url = "https://f001.backblazeb2.com/file/t11a-xyz/20190414_192837-1555520806.jpg"
         tmpdir = TemporaryDirectory()
         outpath_true = path.join(tmpdir.name, "true.html")
         outpath_test = path.join(tmpdir.name, "test.html")
