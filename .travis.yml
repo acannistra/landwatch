@@ -1,8 +1,16 @@
 language: python
 python:
   - 3.8
-install:
+
+cache: 
+  - pip: true
+  - directories:
+    - $HOME/.cache/pypoetry
+
+before_install:
   - pip install poetry
+
+install:
   - poetry install
 
 script:
@@ -10,3 +18,5 @@ script:
 
 after_success:
   - poetry run coveralls
+
+
