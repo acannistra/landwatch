@@ -2,8 +2,8 @@ import click
 
 from loguru import logger
 
-from .legdb import LegislatorDB
-from .legislators import get_sponsors
+from prefect import flow
+from .legislators import process_legislators
 
 @click.group(
     help = "Get metadata for legislators relevant to bills"
@@ -26,6 +26,7 @@ def legislators(ctx):
 @click.option("--api_key", required=True, help="ProPublica Congress API Key.")
 @click.option("--overwrite", is_flag=True)
 @click.pass_context
+@flow
 def download(ctx, **args):
     """
     Retrieve metadata information from the ProPublica Congress API
@@ -35,12 +36,5 @@ def download(ctx, **args):
 
     dbpath = args['bills_db'] if not args['newdb'] else args['newdb']
 
-    legdb = LegislatorDB(dbpath, args['overwrite'])
+    process_legislators(dbpath, args['api_key'], args['overwrite'])
 
-    sponsors = get_sponsors(dbpath,args['api_key'])
-
-    for sponsor, bills in sponsors:
-        bills = bills.split(',')
-        for bill in bills:
-
-            legdb.write(sponsor, bill_id = bill, sponsor_type = 'sponsor')

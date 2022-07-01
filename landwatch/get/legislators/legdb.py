@@ -3,6 +3,8 @@ import os
 import sqlalchemy as sa
 from loguru import logger
 
+from prefect import task
+
 class LegislatorDB(object):
     """Interface to a sqlite database that contains
     metadata about individual legislators and connections

@@ -2,8 +2,13 @@ import sqlalchemy as sa
 import requests
 import requests_cache
 import tqdm
+from .legdb import LegislatorDB
+
+from prefect import task
 
 import os
+
+
 
 def get_single_sponsor(uri, api_key):
     """Use ProPublica Congress API to get a single sponsor metadata
@@ -44,3 +49,15 @@ def get_sponsors(billdb, api_key, table='bills'):
         ))
 
     return list(sponsor_data)
+
+
+@task
+def process_legislators(dbpath, api_key, overwrite):
+    legdb = LegislatorDB(dbpath, overwrite)
+
+    sponsors = get_sponsors(dbpath,api_key)
+
+    for sponsor, bills in sponsors:
+        bills = bills.split(',')
+        for bill in bills:
+            legdb.write(sponsor, bill_id = bill, sponsor_type = 'sponsor')
