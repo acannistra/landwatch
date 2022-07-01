@@ -1,3 +1,5 @@
+from prefect import task, Flow, Parameter
+
 import requests
 import os
 from glob import glob
@@ -17,7 +19,13 @@ opensecrets.py
 
 """
 
-def _insert_file_to_table_with_schema(dbeng, file, schema):
+@task
+def _glob_one(pattern):
+    return glob(pattern)[0]
+
+@task
+def _insert_file_to_table_with_schema(dbpath, file, schema):
+    dbeng = sa.create_engine(f"sqlite:///{dbpath}")
     with open(file, 'r') as f:
         for line in f:
             data = {
@@ -89,17 +97,18 @@ class OSBulkData(object):
         self.datadir = datadir
         self.dbpath = os.path.abspath(dbpath)
 
-        self.engine = sa.create_engine(f"sqlite:///{dbpath}")
 
     def load(self):
         """Imports candidates, committees, and pacs to sqlite db"""
         # create tables
-        OSBulkData.meta.create_all(self.engine)
+        engine = sa.create_engine(f"sqlite:///{self.dbpath}")
+        OSBulkData.meta.create_all(engine)
         # import candidates
+
         try:
-            candfile = glob(os.path.join(self.datadir, "cand*.txt"))[0]
+            candfile = _glob_one(os.path.join(self.datadir, "cand*.txt"))
             _insert_file_to_table_with_schema(
-                self.engine,
+                f"sqlite:///{self.dbpath}",
                 candfile,
                 OSBulkData.candidates_schema
             )
@@ -107,9 +116,9 @@ class OSBulkData(object):
             print("Cannot find candidates")
         # import committees
         try:
-            committeefile = glob(os.path.join(self.datadir, "cmtes*.txt"))[0]
+            committeefile = _glob_one(os.path.join(self.datadir, "cmtes*.txt"))
             _insert_file_to_table_with_schema(
-                self.engine,
+                f"sqlite:///{self.dbpath}",
                 committeefile,
                 OSBulkData.commitees_schema
             )
@@ -117,11 +126,13 @@ class OSBulkData(object):
             print("Cannot find committees")
         # import PACs
         try:
-            pacfile = glob(os.path.join(self.datadir, "pacs*.txt"))[0]
+            pacfile = _glob_one(os.path.join(self.datadir, "pacs*.txt"))
             _insert_file_to_table_with_schema(
-                self.engine,
+                f"sqlite:///{self.dbpath}",
                 pacfile,
                 OSBulkData.pacs_schema
             )
         except IndexError:
             print("cannot find pacs")
+
+        

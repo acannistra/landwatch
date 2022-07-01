@@ -1,4 +1,5 @@
 import click
+from prefect import flow
 from loguru import logger
 
 from .opensecrets import OSBulkData
@@ -39,9 +40,15 @@ def finance(ctx):
     'import',
     help="Import OpenData Bulk Data into sqlite database."
 )
+@click.option(
+    "--register", help="Register flow with Prefect Cloud, don't run. Requires authentication."
+)
 @click.argument("bulkdatadir")
 @click.argument("db")
 @click.pass_context
+@flow
 def _import(ctx, **args):
+    print(ctx.parent.args)
+    
     osb = OSBulkData(args['bulkdatadir'], args['db'])
     osb.load()
