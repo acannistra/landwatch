@@ -15,4 +15,5 @@ dependencies:
     - loguru
     - tqdm
     - retrying
+    - sqlalchemy
 prefix: /Users/tony/miniconda3/envs/landwatch
