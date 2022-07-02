@@ -1,5 +1,6 @@
 import click
 from prefect import flow
+from prefect.task_runners import  SequentialTaskRunner
 from loguru import logger
 
 from .opensecrets import OSBulkData
@@ -46,7 +47,7 @@ def finance(ctx):
 @click.argument("bulkdatadir")
 @click.argument("db")
 @click.pass_context
-@flow
+@flow(task_runner=SequentialTaskRunner)
 def _import(ctx, **args):
     print(ctx.parent.args)
     

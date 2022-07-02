@@ -1,4 +1,4 @@
-from prefect import task, Flow, Parameter
+from prefect import task
 
 import requests
 import os
@@ -108,7 +108,7 @@ class OSBulkData(object):
         try:
             candfile = _glob_one(os.path.join(self.datadir, "cand*.txt"))
             _insert_file_to_table_with_schema(
-                f"sqlite:///{self.dbpath}",
+                self.dbpath,
                 candfile,
                 OSBulkData.candidates_schema
             )
@@ -118,7 +118,7 @@ class OSBulkData(object):
         try:
             committeefile = _glob_one(os.path.join(self.datadir, "cmtes*.txt"))
             _insert_file_to_table_with_schema(
-                f"sqlite:///{self.dbpath}",
+                self.dbpath,
                 committeefile,
                 OSBulkData.commitees_schema
             )
@@ -128,7 +128,7 @@ class OSBulkData(object):
         try:
             pacfile = _glob_one(os.path.join(self.datadir, "pacs*.txt"))
             _insert_file_to_table_with_schema(
-                f"sqlite:///{self.dbpath}",
+                self.dbpath,
                 pacfile,
                 OSBulkData.pacs_schema
             )
