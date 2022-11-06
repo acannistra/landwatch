@@ -36,4 +36,4 @@ There are quite a bit of research questions in this project that either pertain 
 ### Implementation
 This project is developed using Python, Postgres, and Javascript. If you have skills in these or other tools, or want to learn, we'd love for you to help. The best way to start is to check out the open issues page and pick one that sounds interesting.
 
-The first major project is the database creation, which we've divided up into several Python modules. Check out [`landwatch/get/README.md`](landwatch/get) for documentation of the constituent modules there.
+The first major project is the database creation, which we've divided up into several Python modules. Check out [`db/get/README.md`](db/get) for documentation of the constituent modules there.
